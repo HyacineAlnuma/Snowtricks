@@ -5,10 +5,14 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Trick;
-use App\Repository\TrickRepository;
 use Symfony\Component\Routing\Annotation\Route;
+
+use App\Entity\Trick;
+use App\Entity\Comment;
+use App\Repository\TrickRepository;
+use App\Repository\CommentRepository;
 use App\Form\TrickType;
+use App\Form\CommentType;
 
 class TrickController extends AbstractController
 {
@@ -23,12 +27,26 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{id}', name: 'trick')]
-    public function getTrick(TrickRepository $trickRepository, int $id)
+    public function getTrick(TrickRepository $trickRepository, CommentRepository $commentRepository, int $id)
     {
         $trick = $trickRepository->findOneBy(['id' => $id]);
+        $comments = $commentRepository->findAll();
+
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($comment);
+            $entityManager->flush();
+        }  
 
         return $this->render('pages/trick/index.html.twig', [
-            'trick' => $trick
+            'trick' => $trick,
+            'comments' => $comments,
+            'form' => $form->createView()
         ]);
     }
 
