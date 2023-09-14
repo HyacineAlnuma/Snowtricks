@@ -27,20 +27,23 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{id}', name: 'trick')]
-    public function getTrick(TrickRepository $trickRepository, CommentRepository $commentRepository, int $id)
+    public function getTrick(Request $request, EntityManagerInterface $entityManager, TrickRepository $trickRepository, CommentRepository $commentRepository, int $id)
     {
         $trick = $trickRepository->findOneBy(['id' => $id]);
-        $comments = $commentRepository->findAll();
+        $comments = $commentRepository->findBy(['trick' => $id]);
+        dump($comments);
 
         $comment = new Comment();
 
         $form = $this->createForm(CommentType::class, $comment);
 
         $form->handleRequest($request);
+        $comment->setTrick($trick);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($comment);
             $entityManager->flush();
+            return $this->redirectToRoute('trick', ['id' => $id]);
         }  
 
         return $this->render('pages/trick/index.html.twig', [
@@ -62,6 +65,7 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($trick);
             $entityManager->flush();
+            return $this->redirectToRoute('tricks');
         }    
 
         return $this->render('pages/addTrick/index.html.twig', [
