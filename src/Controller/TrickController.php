@@ -18,4 +18,14 @@ class TrickController extends AbstractController
             'tricks' => $tricks
         ]);
     }
+
+    #[Route('/trick/{id}', name: 'trick')]
+    public function getTrick(TrickRepository $trickRepository, int $id)
+    {
+        $trick = $trickRepository->findOneBy(['id' => $id]);
+
+        return $this->render('pages/trick/index.html.twig', [
+            'trick' => $trick
+        ]);
+    }
 }
