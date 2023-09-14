@@ -13,5 +13,9 @@ class TrickController extends AbstractController
     public function getAllTricks(TrickRepository $trickRepository)
     {
         $tricks = $trickRepository->findAll();
+
+        return $this->render('pages/tricks/index.html.twig', [
+            'tricks' => $tricks
+        ]);
     }
 }

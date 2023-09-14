@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    {% for trick in tricks %}
+        <h2>{{ trick.name }}</h2>
+        <p>{{ trick.author }}</p>
+        <p>{{ trick.description }}</p>
+        <p>{{ trick.date }}</p>
+    {% endfor %}
+{% endblock %}
