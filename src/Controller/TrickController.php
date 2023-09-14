@@ -50,4 +50,22 @@ class TrickController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    #[Route('/updateTrick/{id}', name: 'updateTrick')]
+    public function updateTrick(Request $request, EntityManagerInterface $entityManager, int $id, TrickRepository $trickRepository)
+    {
+        $trick = $trickRepository->findOneBy(['id' => $id]);
+
+        $form = $this->createForm(TrickType::class, $trick);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+        }    
+
+        return $this->render('pages/updateTrick/index.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
 }
