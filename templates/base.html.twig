@@ -11,6 +11,18 @@
         {% endblock %}
     </head>
     <body>
+        <nav>
+            <ul>
+                <li><a href="{{ url('home') }}">Accueil</a></li>
+                <li><a href="{{ url('addTrick') }}">Créer une nouvelle figure</a></li>
+                {% if app.user %}
+                <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                {% else %}
+                <li><a href="{{ url('app_register') }}">Inscription</a></li>
+                <li><a href="{{ url('app_login') }}">Connexion</a></li>  
+                {% endif %}
+            </ul>
+        </nav>
         {% block body %}{% endblock %}
     </body>
 </html>

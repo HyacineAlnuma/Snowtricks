@@ -16,12 +16,12 @@ use App\Form\CommentType;
 
 class TrickController extends AbstractController
 {
-    #[Route('/tricks', name: 'tricks')]
+    #[Route('/', name: 'home')]
     public function getAllTricks(TrickRepository $trickRepository)
     {
         $tricks = $trickRepository->findAll();
 
-        return $this->render('pages/tricks/index.html.twig', [
+        return $this->render('pages/home/index.html.twig', [
             'tricks' => $tricks
         ]);
     }
@@ -31,7 +31,6 @@ class TrickController extends AbstractController
     {
         $trick = $trickRepository->findOneBy(['id' => $id]);
         $comments = $commentRepository->findBy(['trick' => $id]);
-        dump($comments);
 
         $comment = new Comment();
 
@@ -65,7 +64,7 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($trick);
             $entityManager->flush();
-            return $this->redirectToRoute('tricks');
+            return $this->redirectToRoute('home');
         }    
 
         return $this->render('pages/addTrick/index.html.twig', [
@@ -100,6 +99,6 @@ class TrickController extends AbstractController
         $entityManager->remove($trick);
         $entityManager->flush();
 
-        return $this->redirectToRoute('tricks');
+        return $this->redirectToRoute('home');
     }
 }
