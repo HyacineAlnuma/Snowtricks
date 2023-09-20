@@ -11,6 +11,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\Image;
 
 class RegistrationFormType extends AbstractType
 {
@@ -35,6 +37,21 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
+            ])
+            ->add('photo', FileType::class, [
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new Image([
+                        'maxSize' => '10M',
+                        "mimeTypes" => [
+                            "image/png",
+                            "image/jpg",
+                            "image/jpeg",
+                        ],
+                        "mimeTypesMessage" => "Veuillez envoyer une image au format png, jpg ou jpeg, de 10 mégas octets maximum"
+                    ])
+                ]
             ])
         ;
     }

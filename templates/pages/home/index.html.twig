@@ -1,6 +1,9 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
+{% if app.user %}
+<img src="{{ asset('uploads/images/' ~ user.imageFileName) }}" alt="">
+{% endif %}
     {% for trick in tricks %}
         <h2>{{ trick.name }}</h2>
         <p>{{ trick.author }}</p>

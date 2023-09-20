@@ -17,12 +17,14 @@ use App\Form\CommentType;
 class TrickController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function getAllTricks(TrickRepository $trickRepository)
+    public function getAllTricks(TrickRepository $trickRepository, Request $request)
     {
         $tricks = $trickRepository->findAll();
+        $user = $this->getUser();
 
         return $this->render('pages/home/index.html.twig', [
-            'tricks' => $tricks
+            'tricks' => $tricks,
+            'user' => $user
         ]);
     }
 

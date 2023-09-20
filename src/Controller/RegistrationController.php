@@ -13,11 +13,18 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(
+        Request $request, 
+        UserPasswordHasherInterface $userPasswordHasher, 
+        UserAuthenticatorInterface $userAuthenticator, 
+        AppAuthenticator $authenticator, 
+        EntityManagerInterface $entityManager,
+        #[Autowire('%photo_dir%')] string $photoDir): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -31,6 +38,15 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+
+            if ($photo = $form['photo']->getData()) {
+                $fileName = uniqid().'.'.$photo->guessExtension();
+                $photo->move($photoDir, $fileName);
+            } else {
+                $fileName = 'defaultImage.png';
+            }
+
+            $user->setImageFileName($fileName);
 
             $entityManager->persist($user);
             $entityManager->flush();
