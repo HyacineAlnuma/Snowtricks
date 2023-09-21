@@ -4,7 +4,6 @@
     <h2>{{ trick.name }}</h2>
     <p>{{ trick.author }}</p>
     <p>{{ trick.description }}</p>
-    <p>{{ trick.date }}</p>
 
     {{ form_start(form) }}
         {{ form_row(form.content) }}
@@ -13,5 +12,6 @@
     {{ form_end(form) }}
     {% for comment in comments %}
         <p>{{ comment.content }}</p>
+        <p>{{ comment.date|date("d/m/Y") }}</p>
     {% endfor %}
 {% endblock %}

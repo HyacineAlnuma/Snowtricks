@@ -39,9 +39,13 @@ class TrickController extends AbstractController
         $form = $this->createForm(CommentType::class, $comment);
 
         $form->handleRequest($request);
-        $comment->setTrick($trick);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setTrick($trick);
+            $author = $this->getUser()->getUsername();
+
+            $comment->setAuthor($author);
+            $comment->setDate(new \DateTime('now'));
             $entityManager->persist($comment);
             $entityManager->flush();
             return $this->redirectToRoute('trick', ['id' => $id]);
@@ -64,6 +68,9 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $author = $this->getUser()->getUsername();
+            $trick->setAuthor($author);
+
             $entityManager->persist($trick);
             $entityManager->flush();
             return $this->redirectToRoute('home');
