@@ -4,6 +4,9 @@
     {{ form_start(form) }}
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
+        {% for video in form.videos %}
+            {{ form_row(video.videoUrl) }}
+        {% endfor %}
 
         <button type="submit" class="btn btn-primary">Créer</button>
     {{ form_end(form) }}

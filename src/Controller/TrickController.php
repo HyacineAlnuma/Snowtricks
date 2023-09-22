@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Entity\Trick;
+use App\Entity\Video;
 use App\Entity\Comment;
 use App\Repository\TrickRepository;
 use App\Repository\CommentRepository;
@@ -63,11 +64,15 @@ class TrickController extends AbstractController
     {
         $trick = new Trick();
 
+        $video = new Video();
+        $trick->getVideos()->add($video);
+
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $video->setTrick($trick);
             $author = $this->getUser()->getUsername();
             $trick->setAuthor($author);
 
