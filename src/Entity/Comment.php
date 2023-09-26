@@ -27,6 +27,11 @@ class Comment
     #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
     private ?trick $trick = null;
 
+    public function __construct() 
+    {
+        $this->date = (new \DateTime('now'));
+    }
+
     public function getId(): ?int
     {
         return $this->id;

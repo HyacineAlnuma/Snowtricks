@@ -5,7 +5,10 @@
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
         {% for video in form.videos %}
-            {{ form_row(video.videoUrl) }}
+            {{ form_row(video.videoEmbed) }}
+        {% endfor %}
+        {% for error in errors %}
+            <p>{{ error }}</p>
         {% endfor %}
 
         <button type="submit" class="btn btn-primary">Créer</button>

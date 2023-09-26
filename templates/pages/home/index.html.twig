@@ -1,15 +1,22 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-{% if app.user %}
-<img src="{{ asset('uploads/images/' ~ user.imageFileName) }}" alt="">
-{% endif %}
+    {% if app.user %}
+        <img src="{{ asset('uploads/images/' ~ user.imageFileName) }}" alt="">
+    {% endif %}
+
+    {% for message in app.flashes('success') %}
+        <div>
+            {{ message }}
+        </div>
+    {% endfor %}
+
     {% for trick in tricks %}
         <h2>{{ trick.name }}</h2>
         <p>{{ trick.author }}</p>
         <p>{{ trick.description }}</p>
-        <a href="/trick/{{ trick.id }}">Lien vers le trick</a>
-        <a href="/updateTrick/{{ trick.id }}">Mettre à jour</a>
-        <a href="/deleteTrick/{{ trick.id }}">Supprimer</a>
+        <a href="{{ url('show_trick', {id: trick.id}) }}">Lien vers le trick</a>
+        <a href="{{ url('update_trick', {id: trick.id}) }}">Mettre à jour</a>
+        <a href="{{ url('delete_trick', {id: trick.id}) }}">Supprimer</a>
     {% endfor %}
 {% endblock %}

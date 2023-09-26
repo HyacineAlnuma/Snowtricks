@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\VideoRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
@@ -13,11 +14,11 @@ class Video
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $videoUrl = null;
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $videoEmbed = null;
 
     #[ORM\ManyToOne(inversedBy: 'videos')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
     private ?Trick $Trick = null;
 
     public function getId(): ?int
@@ -25,14 +26,14 @@ class Video
         return $this->id;
     }
 
-    public function getVideoUrl(): ?string
+    public function getVideoEmbed(): ?string
     {
-        return $this->videoUrl;
+        return $this->videoEmbed;
     }
 
-    public function setVideoUrl(string $videoUrl): static
+    public function setVideoEmbed(string $videoEmbed): static
     {
-        $this->videoUrl = $videoUrl;
+        $this->videoEmbed = $videoEmbed;
 
         return $this;
     }
