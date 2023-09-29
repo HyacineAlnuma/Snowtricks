@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Service\TrickManager;
+
 use App\Entity\Trick;
 use App\Entity\Video;
 use App\Entity\Comment;
@@ -30,19 +32,10 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/trick/{id}', name: 'show_trick')]
-    public function getTrick(Request $request, EntityManagerInterface $entityManager, TrickRepository $trickRepository, CommentRepository $commentRepository, VideoRepository $videoRepository, int $id)
+    #[Route('/trick/{slug}', name: 'show_trick')]
+    public function getTrick(Request $request, EntityManagerInterface $entityManager, TrickRepository $trickRepository, CommentRepository $commentRepository, VideoRepository $videoRepository, string $slug)
     {
-        $trick = $trickRepository->findOneBy(['id' => $id]);
-        $comments = $commentRepository->findBy(['trick' => $id]);
-
-        $videosCollection = $videoRepository->findBy(['Trick' => $id]);
-        $pattern = '/.*src=\\"(.*)" title(.*)/';
-        $videos = [];
-        foreach($videosCollection as $video){
-            $videosCollection = preg_match($pattern, $video->getVideoEmbed(), $match);
-            $videos[] = $match[1];
-        }
+        $trick = $trickRepository->findOneBy(['slug' => $slug]);
 
         $comment = new Comment();
 
@@ -57,19 +50,17 @@ class TrickController extends AbstractController
             $comment->setAuthor($author);
             $entityManager->persist($comment);
             $entityManager->flush();
-            return $this->redirectToRoute('show_trick', ['id' => $id]);
+            return $this->redirectToRoute('show_trick', ['slug' => $slug]);
         }  
 
         return $this->render('pages/trick/index.html.twig', [
             'trick' => $trick,
-            'comments' => $comments,
-            'videos' => $videos,
             'form' => $form->createView()
         ]);
     }
 
     #[Route('/addTrick', name: 'add_trick')]
-    public function addTrick(Request $request, EntityManagerInterface $entityManager, TrickRepository $trickRepository)
+    public function addTrick(Request $request, EntityManagerInterface $entityManager, TrickRepository $trickRepository, TrickManager $trickManager)
     {
         $trick = new Trick();
 
@@ -83,19 +74,31 @@ class TrickController extends AbstractController
         $errors = [];
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $getTrickByName = $trickRepository->findOneBy(['name' => $trick->getName()]);
-            if($getTrickByName == null){
-                $video->setTrick($trick);
-                $author = $this->getUser()->getUsername();
-                $trick->setAuthor($author);
+            // $getTrickByName = $trickRepository->findOneBy(['name' => $trick->getName()]);
+            // if($getTrickByName == null){
+            //     $video->setTrick($trick);
+            //     $author = $this->getUser()->getUsername();
+            //     $trick->setAuthor($author);
+            //     $trick = $trickManager->createVideoUrl($trick);
+            //     $trick = $trickManager->createSlug($trick);
 
-                $entityManager->persist($trick);
-                $entityManager->flush();
-                $this->addFlash('success', 'Votre figure a bien été créée !');
-                return $this->redirectToRoute('home');   
-            } else {
-                $errors[] = 'La figure que vous essayez de créer existe déjà.';
-            }
+            //     $entityManager->persist($trick);
+            //     $entityManager->flush();
+            //     $this->addFlash('success', 'Votre figure a bien été créée !');
+            //     return $this->redirectToRoute('home');   
+            // } else {
+            //     $errors[] = 'La figure que vous essayez de créer existe déjà.';
+            // }
+            $video->setTrick($trick);
+            $author = $this->getUser()->getUsername();
+            $trick->setAuthor($author);
+            $trick = $trickManager->createVideoUrl($trick);
+            $trick = $trickManager->createSlug($trick);
+
+            $entityManager->persist($trick);
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre figure a bien été créée !');
+            return $this->redirectToRoute('home');  
         }    
 
         return $this->render('pages/addTrick/index.html.twig', [

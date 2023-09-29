@@ -4,8 +4,8 @@
     <h2>{{ trick.name }}</h2>
     <p>{{ trick.author }}</p>
     <p>{{ trick.description }}</p>
-    {% for video in videos %}
-        <iframe width="560" height="315" src={{ video }} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    {% for video in trick.videos %}
+        <iframe width="560" height="315" src={{ video.videoEmbed }} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> 
     {% endfor %}
     
 
@@ -14,7 +14,7 @@
 
         <button type="submit" class="btn btn-primary">Créer</button>
     {{ form_end(form) }}
-    {% for comment in comments %}
+    {% for comment in trick.comments %}
         <p>{{ comment.content }}</p>
         <p>{{ comment.date|date("d/m/Y") }}</p>
     {% endfor %}

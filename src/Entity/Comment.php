@@ -23,9 +23,9 @@ class Comment
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
-    private ?trick $trick = null;
+    private ?Trick $trick = null;
 
     public function __construct() 
     {
@@ -73,12 +73,12 @@ class Comment
         return $this;
     }
 
-    public function getTrick(): ?trick
+    public function getTrick(): ?Trick
     {
         return $this->trick;
     }
 
-    public function setTrick(?trick $trick): static
+    public function setTrick(?Trick $trick): static
     {
         $this->trick = $trick;
 
