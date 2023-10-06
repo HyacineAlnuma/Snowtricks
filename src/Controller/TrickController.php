@@ -71,8 +71,6 @@ class TrickController extends AbstractController
 
         $form->handleRequest($request);
 
-        $errors = [];
-
         if ($form->isSubmitted() && $form->isValid()) {
             // $getTrickByName = $trickRepository->findOneBy(['name' => $trick->getName()]);
             // if($getTrickByName == null){
@@ -101,35 +99,36 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('home');  
         }    
 
-        return $this->render('pages/addTrick/index.html.twig', [
-            'form' => $form->createView(),
-            'errors' => $errors
+        return $this->render('pages/trick_form/index.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 
-    #[Route('/updateTrick/{id}', name: 'update_trick')]
-    public function updateTrick(Request $request, EntityManagerInterface $entityManager, int $id, TrickRepository $trickRepository)
+    #[Route('/updateTrick/{slug}', name: 'update_trick')]
+    public function updateTrick(Request $request, EntityManagerInterface $entityManager, string $slug, TrickRepository $trickRepository, TrickManager $trickManager)
     {
-        $trick = $trickRepository->findOneBy(['id' => $id]);
+        $trick = $trickRepository->findOneBy(['slug' => $slug]);
 
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $trick = $trickManager->createVideoUrl($trick);
+            $trick = $trickManager->createSlug($trick);
             $entityManager->flush();
-            return $this->redirectToRoute('show_trick', ['id' => $id]);
+            return $this->redirectToRoute('show_trick', ['slug' => $slug]);
         }    
 
-        return $this->render('pages/updateTrick/index.html.twig', [
+        return $this->render('pages/trick_form/index.html.twig', [
             'form' => $form->createView()
         ]);
     }
 
-    #[Route('/deleteTrick/{id}', name: 'delete_trick')]
-    public function deleteTrick(EntityManagerInterface $entityManager, int $id, TrickRepository $trickRepository)
+    #[Route('/deleteTrick/{slug}', name: 'delete_trick')]
+    public function deleteTrick(EntityManagerInterface $entityManager, string $slug, TrickRepository $trickRepository)
     {
-        $trick = $trickRepository->findOneBy(['id' => $id]);
+        $trick = $trickRepository->findOneBy(['slug' => $slug]);
 
         $entityManager->remove($trick);
         $entityManager->flush();

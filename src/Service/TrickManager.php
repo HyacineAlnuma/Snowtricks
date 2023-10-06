@@ -14,9 +14,11 @@ class TrickManager
         foreach($videos as $video) {
             $pattern = '/.*v=(.*)/';
             preg_match($pattern, $video->getVideoEmbed(), $match);
-            $videoId = $match[1];
-            $videoUrl = self::YOUTUBE_URL . $videoId;
-            $video->setVideoEmbed($videoUrl);
+            if (isset($match[1])) {
+                $videoId = $match[1];
+                $videoUrl = self::YOUTUBE_URL . $videoId;
+                $video->setVideoEmbed($videoUrl);
+            }
         }
         return $trick;
     }

@@ -16,7 +16,7 @@
         <p>{{ trick.author }}</p>
         <p>{{ trick.description }}</p>
         <a href="{{ url('show_trick', {slug: trick.slug}) }}">Lien vers le trick</a>
-        <a href="{{ url('update_trick', {id: trick.id}) }}">Mettre à jour</a>
-        <a href="{{ url('delete_trick', {id: trick.id}) }}">Supprimer</a>
+        <a href="{{ url('update_trick', {slug: trick.slug}) }}">Mettre à jour</a>
+        <a href="{{ url('delete_trick', {slug: trick.slug}) }}">Supprimer</a>
     {% endfor %}
 {% endblock %}
