@@ -3,18 +3,25 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 use App\Service\TrickManager;
+use App\Service\FileUploader;
 
 use App\Entity\Trick;
 use App\Entity\Video;
 use App\Entity\Comment;
+use App\Entity\Image;
+
 use App\Repository\TrickRepository;
 use App\Repository\CommentRepository;
 use App\Repository\VideoRepository;
+
 use App\Form\TrickType;
 use App\Form\CommentType;
 
@@ -60,38 +67,31 @@ class TrickController extends AbstractController
     }
 
     #[Route('/addTrick', name: 'add_trick')]
-    public function addTrick(Request $request, EntityManagerInterface $entityManager, TrickRepository $trickRepository, TrickManager $trickManager)
+    public function addTrick(Request $request, EntityManagerInterface $entityManager, TrickRepository $trickRepository, TrickManager $trickManager, ValidatorInterface $validator, FileUploader $fileUploader, #[Autowire('%tricks_dir%')] string $targetDirectory)
     {
         $trick = new Trick();
 
         $video = new Video();
         $trick->getVideos()->add($video);
 
+        $image = new Image();
+        $trick->getImages()->add($image);
+
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $getTrickByName = $trickRepository->findOneBy(['name' => $trick->getName()]);
-            // if($getTrickByName == null){
-            //     $video->setTrick($trick);
-            //     $author = $this->getUser()->getUsername();
-            //     $trick->setAuthor($author);
-            //     $trick = $trickManager->createVideoUrl($trick);
-            //     $trick = $trickManager->createSlug($trick);
-
-            //     $entityManager->persist($trick);
-            //     $entityManager->flush();
-            //     $this->addFlash('success', 'Votre figure a bien été créée !');
-            //     return $this->redirectToRoute('home');   
-            // } else {
-            //     $errors[] = 'La figure que vous essayez de créer existe déjà.';
-            // }
+            if ($formImage = $form->get('images')->getData()) {
+                $imageName = $fileUploader->upload($formImage, $targetDirectory);
+                $image->setFileName($imageName);
+            }
             $video->setTrick($trick);
+            $image->setTrick($trick);
             $author = $this->getUser()->getUsername();
             $trick->setAuthor($author);
-            $trick = $trickManager->createVideoUrl($trick);
-            $trick = $trickManager->createSlug($trick);
+            $trickManager->manageVideoUrl($trick->getVideos());
+            $trick->setSlug($trickManager->createSlug($trick->getName()));
 
             $entityManager->persist($trick);
             $entityManager->flush();

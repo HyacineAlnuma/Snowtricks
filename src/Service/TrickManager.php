@@ -3,14 +3,15 @@
 namespace App\Service;
 
 use App\Entity\Trick;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class TrickManager 
 {
     private const YOUTUBE_URL = 'https://www.youtube.com/embed/';
 
-    public function createVideoUrl(Trick $trick) : Trick
+    public function manageVideoUrl(Collection $videos) : void
     {
-        $videos = $trick->getVideos();
         foreach($videos as $video) {
             $pattern = '/.*v=(.*)/';
             preg_match($pattern, $video->getVideoEmbed(), $match);
@@ -20,16 +21,14 @@ class TrickManager
                 $video->setVideoEmbed($videoUrl);
             }
         }
-        return $trick;
     }
 
-    public function createSlug(Trick $trick) : Trick
+    public function createSlug(string $name) : string
     {
-        $name = $trick->getName();
+        // $slugger = new AsciiSlugger();
+        // return $slugger->slug($name);
         $pattern = '/[^\w\-]+|-|_/';
         $slug = preg_replace($pattern, '', $name);
-        $slug = strtolower($slug);
-        $trick->setSlug($slug);
-        return $trick;
+        return strtolower($slug);
     }
 }
