@@ -22,15 +22,15 @@
 
 
         <ul class="images"
-            {# data-index="{{ form.images|length > 0 ? form.images|last.vars.name + 1 : 0 }}"
-            data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}" #}
+            data-index="{{ form.images|length > 0 ? form.images|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}"
         > 
         {% for image in form.images %}
             {{ form_row(image.fileName) }}
         {% endfor %}
 
         </ul>
-        <button type="button" class="add_image_link" data-collection-holder-class="images">Add an image</button>
+        <button type="button" class="add_image_link" data-collection-holders-class="images">Add an image</button>
 
 
         <button type="submit" class="btn btn-primary">Créer</button>

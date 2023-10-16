@@ -83,20 +83,21 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($formImage = $form->get('images')->getData()) {
-                $imageName = $fileUploader->upload($formImage, $targetDirectory);
-                $image->setFileName($imageName);
+                //$fileUploader->upload($formImage, $targetDirectory);
+                foreach($formImage as $i) {dump($i);}
             }
-            $video->setTrick($trick);
-            $image->setTrick($trick);
-            $author = $this->getUser()->getUsername();
-            $trick->setAuthor($author);
-            $trickManager->manageVideoUrl($trick->getVideos());
-            $trick->setSlug($trickManager->createSlug($trick->getName()));
+            //$fileUploader->upload($trick->getImages(), $targetDirectory);
+            // $video->setTrick($trick);
+            // $image->setTrick($trick);
+            // $author = $this->getUser()->getUsername();
+            // $trick->setAuthor($author);
+            // $trickManager->manageVideoUrl($trick->getVideos());
+            // $trick->setSlug($trickManager->createSlug($trick->getName()));
 
-            $entityManager->persist($trick);
-            $entityManager->flush();
-            $this->addFlash('success', 'Votre figure a bien été créée !');
-            return $this->redirectToRoute('home');  
+            // $entityManager->persist($trick);
+            // $entityManager->flush();
+            // $this->addFlash('success', 'Votre figure a bien été créée !');
+            // return $this->redirectToRoute('home');  
         }    
 
         return $this->render('pages/trick_form/index.html.twig', [

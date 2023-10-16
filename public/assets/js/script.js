@@ -52,25 +52,24 @@ const addFormVideoToCollection = (e) => {
 
     collectionHolder.dataset.index++;
     addVideoFormDeleteLink(item);
-    addImageFormDeleteLink(item);
 };
 
 const addFormImageToCollection = (e) => {
-    const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+    const collectionHolders = document.querySelector('.' + e.currentTarget.dataset.collectionHoldersClass);
 
     const item = document.createElement('li');
 
-    item.innerHTML = collectionHolder
+    item.innerHTML = collectionHolders
         .dataset
         .prototype
         .replace(
         /__name__/g,
-        collectionHolder.dataset.index
+        collectionHolders.dataset.index
         );
 
-    collectionHolder.appendChild(item);
+    collectionHolders.appendChild(item);
 
-    collectionHolder.dataset.index++;
+    collectionHolders.dataset.index++;
     addImageFormDeleteLink(item);
 };
 
