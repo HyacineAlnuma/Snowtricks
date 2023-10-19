@@ -40,10 +40,8 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{slug}', name: 'show_trick')]
-    public function getTrick(Request $request, EntityManagerInterface $entityManager, TrickRepository $trickRepository, CommentRepository $commentRepository, VideoRepository $videoRepository, string $slug)
+    public function getTrick(Request $request, EntityManagerInterface $entityManager, Trick $trick, string $slug)
     {
-        $trick = $trickRepository->findOneBy(['slug' => $slug]);
-
         $comment = new Comment();
 
         $form = $this->createForm(CommentType::class, $comment);
@@ -67,37 +65,34 @@ class TrickController extends AbstractController
     }
 
     #[Route('/addTrick', name: 'add_trick')]
-    public function addTrick(Request $request, EntityManagerInterface $entityManager, TrickRepository $trickRepository, TrickManager $trickManager, ValidatorInterface $validator, FileUploader $fileUploader, #[Autowire('%tricks_dir%')] string $targetDirectory)
+    public function addTrick(
+        Request $request, 
+        EntityManagerInterface $entityManager, 
+        TrickRepository $trickRepository, 
+        TrickManager $trickManager, 
+        ValidatorInterface $validator, 
+        FileUploader $fileUploader, 
+        #[Autowire('%tricks_dir%')] string $targetDirectory)
     {
         $trick = new Trick();
-
-        $video = new Video();
-        $trick->getVideos()->add($video);
-
-        $image = new Image();
-        $trick->getImages()->add($image);
 
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($formImage = $form->get('images')->getData()) {
-                //$fileUploader->upload($formImage, $targetDirectory);
-                foreach($formImage as $i) {dump($i);}
+            if ($formImage = $form->get('images')) {
+                $fileUploader->upload($formImage, $targetDirectory);
             }
-            //$fileUploader->upload($trick->getImages(), $targetDirectory);
-            // $video->setTrick($trick);
-            // $image->setTrick($trick);
-            // $author = $this->getUser()->getUsername();
-            // $trick->setAuthor($author);
-            // $trickManager->manageVideoUrl($trick->getVideos());
-            // $trick->setSlug($trickManager->createSlug($trick->getName()));
+            $author = $this->getUser()->getUsername();
+            $trick->setAuthor($author);
+            $trickManager->manageVideoUrl($trick->getVideos());
+            $trick->setSlug($trickManager->createSlug($trick->getName()));
 
-            // $entityManager->persist($trick);
-            // $entityManager->flush();
-            // $this->addFlash('success', 'Votre figure a bien été créée !');
-            // return $this->redirectToRoute('home');  
+            $entityManager->persist($trick);
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre figure a bien été créée !');
+            return $this->redirectToRoute('home');  
         }    
 
         return $this->render('pages/trick_form/index.html.twig', [
@@ -106,17 +101,16 @@ class TrickController extends AbstractController
     }
 
     #[Route('/updateTrick/{slug}', name: 'update_trick')]
-    public function updateTrick(Request $request, EntityManagerInterface $entityManager, string $slug, TrickRepository $trickRepository, TrickManager $trickManager)
+    public function updateTrick(Request $request, EntityManagerInterface $entityManager, Trick $trick, TrickManager $trickManager, string $slug)
     {
-        $trick = $trickRepository->findOneBy(['slug' => $slug]);
-
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick = $trickManager->createVideoUrl($trick);
-            $trick = $trickManager->createSlug($trick);
+            $trick = $trickManager->manageVideoUrl($trick->getVideos());
+            $trick->setSlug($trickManager->createSlug($trick->getName()));
+
             $entityManager->flush();
             return $this->redirectToRoute('show_trick', ['slug' => $slug]);
         }    
@@ -127,10 +121,8 @@ class TrickController extends AbstractController
     }
 
     #[Route('/deleteTrick/{slug}', name: 'delete_trick')]
-    public function deleteTrick(EntityManagerInterface $entityManager, string $slug, TrickRepository $trickRepository)
+    public function deleteTrick(EntityManagerInterface $entityManager, Trick $trick)
     {
-        $trick = $trickRepository->findOneBy(['slug' => $slug]);
-
         $entityManager->remove($trick);
         $entityManager->flush();
 

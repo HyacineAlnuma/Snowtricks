@@ -7,6 +7,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\Form;
 
 class FileUploader
 {
@@ -15,16 +16,18 @@ class FileUploader
     ) {
     }
 
-    public function upload(ArrayCollection $images, string $targetDirectory): void
+    public function upload(Form $images, string $targetDirectory): void
     {
         foreach($images as $image) {
-            dump($image);
-            // $file = new File($image->getName());
+            // dump($image->getData());
+            $file = $image->get('file')->getData();
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $this->slugger->slug($originalFilename);
             $fileName = uniqid().'.'.$file->guessExtension();
-            $image->setFileName($fileName);
 
             try {
-                $image->move($targetDirectory, $fileName);
+                $file->move($targetDirectory, $fileName);
+                $image->getData()->setFileName($fileName);
             } catch (FileException $e) {
                 // ... handle exception if something happens during file upload
             }

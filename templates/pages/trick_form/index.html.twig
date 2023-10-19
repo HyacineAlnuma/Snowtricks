@@ -26,7 +26,7 @@
             data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}"
         > 
         {% for image in form.images %}
-            {{ form_row(image.fileName) }}
+            {{ form_row(image.file) }}
         {% endfor %}
 
         </ul>
