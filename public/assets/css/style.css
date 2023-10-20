@@ -772,7 +772,8 @@ h1, h2, h3, h4, h5,
         height: calc(70vh - 196px);
         min-height: 600px; } }
   .site-section-cover.overlay {
-    position: relative; }
+    position: relative; 
+    background-image: url('../images/home_bg.jpg');}
     .site-section-cover.overlay:before {
       position: absolute;
       content: "";

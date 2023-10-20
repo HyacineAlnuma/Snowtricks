@@ -14,9 +14,6 @@ class Comment
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $author = null;
-
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
@@ -27,6 +24,10 @@ class Comment
     #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
     private ?Trick $trick = null;
 
+    #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $User = null;
+
     public function __construct() 
     {
         $this->date = (new \DateTime('now'));
@@ -35,18 +36,6 @@ class Comment
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getAuthor(): ?string
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(?string $author): static
-    {
-        $this->author = $author;
-
-        return $this;
     }
 
     public function getContent(): ?string
@@ -81,6 +70,18 @@ class Comment
     public function setTrick(?Trick $trick): static
     {
         $this->trick = $trick;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): static
+    {
+        $this->User = $User;
 
         return $this;
     }

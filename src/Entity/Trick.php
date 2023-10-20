@@ -24,11 +24,8 @@ class Trick
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $author = null;
-
     #[Assert\NotBlank]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'text', length: 65535)]
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class, orphanRemoval: true, cascade:['persist'])]
@@ -42,6 +39,10 @@ class Trick
 
     #[ORM\OneToMany(mappedBy: 'Trick', targetEntity: Image::class, orphanRemoval: true, cascade:['persist'])]
     private Collection $images;
+
+    #[ORM\ManyToOne(inversedBy: 'tricks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $User = null;
 
     public function __construct()
     {
@@ -63,18 +64,6 @@ class Trick
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getAuthor(): ?string
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(string $author): static
-    {
-        $this->author = $author;
 
         return $this;
     }
@@ -167,6 +156,18 @@ class Trick
                 $image->setTrick(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): static
+    {
+        $this->User = $User;
 
         return $this;
     }

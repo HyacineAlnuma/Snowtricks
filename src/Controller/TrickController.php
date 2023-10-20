@@ -50,9 +50,8 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setTrick($trick);
-            $author = $this->getUser()->getUsername();
 
-            $comment->setAuthor($author);
+            $comment->setUser($this->getUser());
             $entityManager->persist($comment);
             $entityManager->flush();
             return $this->redirectToRoute('show_trick', ['slug' => $slug]);
@@ -84,8 +83,7 @@ class TrickController extends AbstractController
             if ($formImage = $form->get('images')) {
                 $fileUploader->upload($formImage, $targetDirectory);
             }
-            $author = $this->getUser()->getUsername();
-            $trick->setAuthor($author);
+            $trick->setUser($this->getUser());
             $trickManager->manageVideoUrl($trick->getVideos());
             $trick->setSlug($trickManager->createSlug($trick->getName()));
 
@@ -101,15 +99,23 @@ class TrickController extends AbstractController
     }
 
     #[Route('/updateTrick/{slug}', name: 'update_trick')]
-    public function updateTrick(Request $request, EntityManagerInterface $entityManager, Trick $trick, TrickManager $trickManager, string $slug)
+    public function updateTrick(Request $request, 
+        EntityManagerInterface $entityManager, 
+        Trick $trick, TrickManager $trickManager, 
+        string $slug, 
+        FileUploader $fileUploader, 
+        #[Autowire('%tricks_dir%')] string $targetDirectory)
     {
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($formImage = $form->get('images')) {
+                $fileUploader->upload($formImage, $targetDirectory);
+            }
             $trick = $trickManager->manageVideoUrl($trick->getVideos());
-            $trick->setSlug($trickManager->createSlug($trick->getName()));
+            // $trick->setSlug($trickManager->createSlug($trick->getName()));
 
             $entityManager->flush();
             return $this->redirectToRoute('show_trick', ['slug' => $slug]);

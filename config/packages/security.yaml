@@ -39,6 +39,9 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/addTrick, roles: [IS_AUTHENTICATED_FULLY, ROLE_USER] }
+        - { path: ^/deleteTrick, roles: [IS_AUTHENTICATED_FULLY, ROLE_USER] }
+        - { path: ^/updateTrick, roles: [IS_AUTHENTICATED_FULLY, ROLE_USER] }
 
 when@test:
     security:

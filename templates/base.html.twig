@@ -58,8 +58,8 @@
               <nav class="site-navigation text-right ml-auto d-none d-lg-block" role="navigation">
                 <ul class="site-menu main-menu js-clone-nav ml-auto ">
                   <li class="active"><a href="{{ path('home') }}" class="nav-link">Accueil</a></li>
-                  <li><a href="{{ path('add_trick') }}" class="nav-link">Créer une nouvelle figure</a></li>
                   {% if app.user %}
+                  <li><a href="{{ path('add_trick') }}" class="nav-link">Créer une nouvelle figure</a></li>
                   <li><a href="{{ path('app_logout') }}" class="nav-link">Déconnexion</a></li>
                   {% else %}
                   <li><a href="{{ path('app_register') }}" class="nav-link">Inscription</a></li>
@@ -74,18 +74,7 @@
         </div>
 
       </header>
-        {# <nav>
-            <ul>
-                <li><a href="{{ path('home') }}">Accueil</a></li>
-                <li><a href="{{ path('add_trick') }}">Créer une nouvelle figure</a></li>
-                {% if app.user %}
-                <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                {% else %}
-                <li><a href="{{ path('app_register') }}">Inscription</a></li>
-                <li><a href="{{ path('app_login') }}">Connexion</a></li>  
-                {% endif %}
-            </ul>
-        </nav> #}
+
         {% block body %}{% endblock %}
 
   <script src="{{ asset('assets/js/jquery-3.3.1.min.js') }}"></script>
