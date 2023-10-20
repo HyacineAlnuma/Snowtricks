@@ -62,22 +62,10 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            return $this->redirectToRoute('trick', ['id' => $id]);
         }    
 
         return $this->render('pages/updateTrick/index.html.twig', [
             'form' => $form->createView()
         ]);
-    }
-
-    #[Route('/deleteTrick/{id}', name: 'deleteTrick')]
-    public function deleteTrick(EntityManagerInterface $entityManager, int $id, TrickRepository $trickRepository)
-    {
-        $trick = $trickRepository->findOneBy(['id' => $id]);
-
-        $entityManager->remove($trick);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('tricks');
     }
 }
