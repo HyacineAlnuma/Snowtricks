@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use App\Service\FileUploader;
 
 class RegistrationController extends AbstractController
 {
@@ -24,6 +25,7 @@ class RegistrationController extends AbstractController
         UserAuthenticatorInterface $userAuthenticator, 
         AppAuthenticator $authenticator, 
         EntityManagerInterface $entityManager,
+        FileUploader $fileUploader, 
         #[Autowire('%photo_dir%')] string $photoDir): Response
     {
         $user = new User();

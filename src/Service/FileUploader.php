@@ -11,16 +11,17 @@ use Symfony\Component\Form\Form;
 
 class FileUploader
 {
-    public function __construct(
-        private SluggerInterface $slugger,
-    ) {
+    public function __construct(private SluggerInterface $slugger) 
+    {
     }
 
     public function upload(Form $images, string $targetDirectory): void
     {
         foreach($images as $image) {
-            // dump($image->getData());
             $file = $image->get('file')->getData();
+            if(!$file) {
+                continue;
+            }
             $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $safeFilename = $this->slugger->slug($originalFilename);
             $fileName = uniqid().'.'.$file->guessExtension();

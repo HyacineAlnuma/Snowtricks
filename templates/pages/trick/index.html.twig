@@ -16,6 +16,8 @@
 
     <div class="site-section">
       <div class="container">
+        <a class="px-3 mb-3 category bg-primary" href="{{ url('update_trick', {slug: trick.slug}) }}">Modifier</a>
+        <a class="px-3 mb-3 category bg-primary" href="{{ url('delete_trick', {slug: trick.slug}) }}">Supprimer</a>
         <div class="row">
           <div class="blog-content">
             <p>{{ trick.description }}</p>
@@ -41,7 +43,7 @@
 
 
             <div class="pt-5">
-              <h3 class="mb-5">"Nombre" Commentaires</h3>
+              <h3 class="mb-5">{{ trick.comments|length }} Commentaires</h3>
               <ul class="comment-list">
                   {% for comment in trick.comments %}
                         <li class="comment">
@@ -84,21 +86,21 @@
 
                 </form>
               </div> #}
+
+              {% if app.user %}
+                {{ form_start(form) }}
+                    {{ form_row(form.content) }}
+
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                {{ form_end(form) }}
+              {% else %}
+                Veuillez <a href="{{ path('app_login') }}">vous connecter</a> ou <a href="{{ path('app_register') }}">créer un compte</a> pour poster un commentaire.
+              {% endif %}
             </div>
 
           </div>
         </div>
       </div>
     </div>
-    
 
-    {{ form_start(form) }}
-        {{ form_row(form.content) }}
-
-        <button type="submit" class="btn btn-primary">Créer</button>
-    {{ form_end(form) }}
-    {% for comment in trick.comments %}
-        <p>{{ comment.content }}</p>
-        <p>{{ comment.date|date("d/m/Y") }}</p>
-    {% endfor %}
 {% endblock %}

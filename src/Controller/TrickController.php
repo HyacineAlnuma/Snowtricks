@@ -40,7 +40,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{slug}', name: 'show_trick')]
-    public function getTrick(Request $request, EntityManagerInterface $entityManager, Trick $trick, string $slug)
+    public function getTrick(Request $request, EntityManagerInterface $entityManager, Trick $trick)
     {
         $comment = new Comment();
 
@@ -54,7 +54,7 @@ class TrickController extends AbstractController
             $comment->setUser($this->getUser());
             $entityManager->persist($comment);
             $entityManager->flush();
-            return $this->redirectToRoute('show_trick', ['slug' => $slug]);
+            return $this->redirectToRoute('show_trick', ['slug' => $trick->getSlug()]);
         }  
 
         return $this->render('pages/trick/index.html.twig', [
@@ -82,6 +82,8 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($formImage = $form->get('images')) {
                 $fileUploader->upload($formImage, $targetDirectory);
+            } else {
+                $errors[] = 'Veuillez sélectionner au moins une image.';
             }
             $trick->setUser($this->getUser());
             $trickManager->manageVideoUrl($trick->getVideos());
@@ -102,7 +104,6 @@ class TrickController extends AbstractController
     public function updateTrick(Request $request, 
         EntityManagerInterface $entityManager, 
         Trick $trick, TrickManager $trickManager, 
-        string $slug, 
         FileUploader $fileUploader, 
         #[Autowire('%tricks_dir%')] string $targetDirectory)
     {
@@ -114,11 +115,11 @@ class TrickController extends AbstractController
             if ($formImage = $form->get('images')) {
                 $fileUploader->upload($formImage, $targetDirectory);
             }
-            $trick = $trickManager->manageVideoUrl($trick->getVideos());
-            // $trick->setSlug($trickManager->createSlug($trick->getName()));
+            $trickManager->manageVideoUrl($trick->getVideos());
+            $trick->setSlug($trickManager->createSlug($trick->getName()));
 
             $entityManager->flush();
-            return $this->redirectToRoute('show_trick', ['slug' => $slug]);
+            return $this->redirectToRoute('show_trick', ['slug' => $trick->getSlug()]);
         }    
 
         return $this->render('pages/trick_form/index.html.twig', [

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 class Image
@@ -15,6 +16,9 @@ class Image
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $FileName = null;
+
+    #[Assert\Image]
+    private $file = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]
     #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
@@ -33,6 +37,18 @@ class Image
     public function setFileName(?string $FileName): static
     {
         $this->FileName = $FileName;
+
+        return $this;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile( $file): static
+    {
+        $this->file = $file;
 
         return $this;
     }

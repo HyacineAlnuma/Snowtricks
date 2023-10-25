@@ -7,6 +7,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Validator\Constraints\Valid;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 class TrickType extends AbstractType
 {
@@ -15,6 +19,14 @@ class TrickType extends AbstractType
         $builder
             ->add('name')
             ->add('description', TextareaType::class)
+            ->add('category', ChoiceType::class, [
+                'placeholder' => 'Sélectionnez une catégorie',
+                'choices'  => [
+                    'Maybe' => 'null',
+                    'Yes' => 'yes',
+                    'No' => 'false',
+                ],
+            ])
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,
                 'entry_options' => ['label' => false],
@@ -29,7 +41,6 @@ class TrickType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
             ]);
-            ;
     }
     
     public function configureOptions(OptionsResolver $resolver)

@@ -55,21 +55,21 @@ const addFormVideoToCollection = (e) => {
 };
 
 const addFormImageToCollection = (e) => {
-    const collectionHolders = document.querySelector('.' + e.currentTarget.dataset.collectionHoldersClass);
+    const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
 
     const item = document.createElement('li');
 
-    item.innerHTML = collectionHolders
+    item.innerHTML = collectionHolder
         .dataset
         .prototype
         .replace(
         /__name__/g,
-        collectionHolders.dataset.index
+        collectionHolder.dataset.index
         );
 
-    collectionHolders.appendChild(item);
+    collectionHolder.appendChild(item);
 
-    collectionHolders.dataset.index++;
+    collectionHolder.dataset.index++;
     addImageFormDeleteLink(item);
 };
 

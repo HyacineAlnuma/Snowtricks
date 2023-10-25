@@ -28,6 +28,8 @@ class Trick
     #[ORM\Column(type: 'text', length: 65535)]
     private ?string $description = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class, orphanRemoval: true, cascade:['persist'])]
     private Collection $videos;
 
@@ -37,6 +39,7 @@ class Trick
     #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'Trick', targetEntity: Image::class, orphanRemoval: true, cascade:['persist'])]
     private Collection $images;
 
@@ -44,11 +47,16 @@ class Trick
     #[ORM\JoinColumn(nullable: false)]
     private ?User $User = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $Category = null;
+
     public function __construct()
     {
         $this->videos = new ArrayCollection();
+        $this->addVideo(new Video());
         $this->comments = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->addImage(new Image());
     }
 
     public function getId(): ?int
@@ -168,6 +176,18 @@ class Trick
     public function setUser(?User $User): static
     {
         $this->User = $User;
+
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->Category;
+    }
+
+    public function setCategory(string $Category): static
+    {
+        $this->Category = $Category;
 
         return $this;
     }
