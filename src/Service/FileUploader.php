@@ -11,8 +11,7 @@ use Symfony\Component\Form\Form;
 
 class FileUploader
 {
-    public function __construct(private SluggerInterface $slugger) 
-    {
+    public function __construct(private SluggerInterface $slugger) {
     }
 
     public function upload(Form $images, string $targetDirectory): void

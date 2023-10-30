@@ -82,8 +82,6 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($formImage = $form->get('images')) {
                 $fileUploader->upload($formImage, $targetDirectory);
-            } else {
-                $errors[] = 'Veuillez sélectionner au moins une image.';
             }
             $trick->setUser($this->getUser());
             $trickManager->manageVideoUrl($trick->getVideos());

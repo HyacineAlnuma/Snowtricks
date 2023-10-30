@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 class Image
@@ -17,8 +18,17 @@ class Image
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $FileName = null;
 
-    #[Assert\Image]
-    private $file = null;
+    #[Assert\Image([
+        'maxSize' => '10M',
+        "mimeTypes" => [
+            "image/png",
+            "image/jpg",
+            "image/jpeg",
+        ],
+        "mimeTypesMessage" => "Veuillez envoyer une image au format png, jpg ou jpeg, de 10 mégas octets maximum"
+    ])]
+    #[Assert\NotBlank]
+    private ?File $file = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]
     #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]

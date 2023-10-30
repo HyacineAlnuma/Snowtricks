@@ -17,8 +17,8 @@ class Comment
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date = null;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
@@ -30,7 +30,8 @@ class Comment
 
     public function __construct() 
     {
-        $this->date = (new \DateTime('now'));
+        $now = date('Y-m-d H:i:s', time());
+        $this->date = date_create_from_format('Y-m-d H:i:s', $now);
     }
 
     public function getId(): ?int

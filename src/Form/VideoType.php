@@ -13,7 +13,7 @@ class VideoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('videoEmbed', TextareaType::class, );
+        $builder->add('videoEmbed');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -17,18 +17,7 @@ class ImageType extends AbstractType
         $builder->add('file', FileType::class, [
             'label' => 'Image',
             'required' => false,
-            // 'constraints' => [
-            //     new Assert\Image([
-            //         'maxSize' => '10M',
-            //         "mimeTypes" => [
-            //             "image/png",
-            //             "image/jpg",
-            //             "image/jpeg",
-            //         ],
-            //         "mimeTypesMessage" => "Veuillez envoyer une image au format png, jpg ou jpeg, de 10 mégas octets maximum"
-            //     ])
-            // ]
-        ]);
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

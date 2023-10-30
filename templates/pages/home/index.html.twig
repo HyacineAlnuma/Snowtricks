@@ -17,14 +17,12 @@
 
 
     <div class="site-section">
-
-    {% for message in app.flashes('success') %}
-        <div>
-            {{ message }}
-        </div>
-    {% endfor %}
-
       <div class="container">
+          {% for message in app.flashes('success') %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+          {% endfor %}
         <div class="row justify-content-center text-center">
           <div class="col-md-7">
             <div class="heading-39101 mb-5">
@@ -40,13 +38,13 @@
           
             <div class="listing-item">
             
-              <div class="listing-image">
-                <img src="{{ asset('uploads/tricks/' ~ trick.images[0].FileName) }}" alt="Image" class="img-fluid">
-              </div>
+              <a href="{{ url('show_trick', {slug: trick.slug}) }}"><img src="{{ asset('uploads/tricks/' ~ trick.images[0].FileName) }}" alt="Image" class="img-fluid"></a>
            
               <div class="listing-item-content">
-                <a class="px-3 mb-3 category bg-primary" href="{{ url('update_trick', {slug: trick.slug}) }}">Modifier</a>
-                <a class="px-3 mb-3 category bg-primary" href="{{ url('delete_trick', {slug: trick.slug}) }}">Supprimer</a>
+                {% if app.user %}
+                  <a class="px-3 mb-3 category bg-primary" href="{{ url('update_trick', {slug: trick.slug}) }}"><i class="fa-solid fa-pen"></i></a>
+                  <a class="px-3 mb-3 category bg-primary" href="{{ url('delete_trick', {slug: trick.slug}) }}"><i class="fa-solid fa-trash"></i></a>
+                {% endif %}
                 <a href="{{ url('show_trick', {slug: trick.slug}) }}"><h2 class="mb-1">{{ trick.name }}</h2></a>
               </div>
             </div>

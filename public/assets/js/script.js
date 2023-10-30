@@ -1,6 +1,7 @@
 const addVideoFormDeleteLink = (item) => {
     const removeFormButton = document.createElement('button');
     removeFormButton.innerText = 'Delete this video';
+    removeFormButton.classList.add('delete_link');
 
     item.append(removeFormButton);
 
@@ -14,6 +15,7 @@ const addVideoFormDeleteLink = (item) => {
 const addImageFormDeleteLink = (item) => {
     const removeFormButton = document.createElement('button');
     removeFormButton.innerText = 'Delete this image';
+    removeFormButton.classList.add('delete_link');
 
     item.append(removeFormButton);
 
@@ -30,7 +32,7 @@ document
     })
 
 document
-    .querySelectorAll('ul.images div')
+    .querySelectorAll('ul.images input')
     .forEach((image) => {
         addImageFormDeleteLink(image)
     })

@@ -34,6 +34,7 @@ class Trick
     private Collection $videos;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true, cascade:['persist'])]
+    #[OrderBy(["date" => "DESC"])]
     private Collection $comments;
 
     #[ORM\Column(length: 255, unique: true)]
