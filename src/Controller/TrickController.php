@@ -25,6 +25,8 @@ use App\Repository\VideoRepository;
 use App\Form\TrickType;
 use App\Form\CommentType;
 
+use Symfony\Component\HttpFoundation\File\File;
+
 class TrickController extends AbstractController
 {
     #[Route('/', name: 'home')]
@@ -40,8 +42,12 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{slug}', name: 'show_trick')]
-    public function getTrick(Request $request, EntityManagerInterface $entityManager, Trick $trick)
+    public function getTrick(Request $request, EntityManagerInterface $entityManager, Trick $trick, CommentRepository $commentRepository)
     {
+        $page = $request->query->getInt('commentsPage', 1);
+
+        $comments = $commentRepository->findCommentsPaginated($page, $trick->getSlug(), 1);
+
         $comment = new Comment();
 
         $form = $this->createForm(CommentType::class, $comment);
@@ -59,7 +65,8 @@ class TrickController extends AbstractController
 
         return $this->render('pages/trick/index.html.twig', [
             'trick' => $trick,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'comments' => $comments
         ]);
     }
 
@@ -79,10 +86,14 @@ class TrickController extends AbstractController
 
         $form->handleRequest($request);
 
+        $error = '';
         if ($form->isSubmitted() && $form->isValid()) {
             if ($formImage = $form->get('images')) {
                 $fileUploader->upload($formImage, $targetDirectory);
             }
+            if (null == $trick->getImages()[0]->getFileName()) {
+                $error = 'Vous devez sélectionner au moins une image';
+            } else {
             $trick->setUser($this->getUser());
             $trickManager->manageVideoUrl($trick->getVideos());
             $trick->setSlug($trickManager->createSlug($trick->getName()));
@@ -90,11 +101,13 @@ class TrickController extends AbstractController
             $entityManager->persist($trick);
             $entityManager->flush();
             $this->addFlash('success', 'Votre figure a bien été créée !');
-            return $this->redirectToRoute('home');  
+            return $this->redirectToRoute('home'); 
+            } 
         }    
 
         return $this->render('pages/trick_form/index.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'error' => $error
         ]);
     }
 
@@ -109,25 +122,42 @@ class TrickController extends AbstractController
 
         $form->handleRequest($request);
 
+        $error = '';
         if ($form->isSubmitted() && $form->isValid()) {
             if ($formImage = $form->get('images')) {
                 $fileUploader->upload($formImage, $targetDirectory);
             }
-            $trickManager->manageVideoUrl($trick->getVideos());
-            $trick->setSlug($trickManager->createSlug($trick->getName()));
+            if (null == $trick->getImages()[0]->getFileName()) {
+                $error = 'Vous devez sélectionner au moins une image';
+            } else {
+                $trickManager->manageVideoUrl($trick->getVideos());
+                $trick->setSlug($trickManager->createSlug($trick->getName()));
 
-            $entityManager->flush();
-            return $this->redirectToRoute('show_trick', ['slug' => $trick->getSlug()]);
+                $entityManager->flush();
+                return $this->redirectToRoute('show_trick', ['slug' => $trick->getSlug()]);
+            }
         }    
 
         return $this->render('pages/trick_form/index.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'error' => $error
         ]);
     }
 
     #[Route('/deleteTrick/{slug}', name: 'delete_trick')]
-    public function deleteTrick(EntityManagerInterface $entityManager, Trick $trick)
+    public function deleteTrick(EntityManagerInterface $entityManager, Trick $trick, #[Autowire('%tricks_dir%')] string $targetDirectory)
     {
+        // $images = $trick->getImages();
+
+        // if($images) {
+        //     foreach($images as $image) {
+        //         $imageName = $targetDirectory. '/' . $image->getFileName();
+        //         if (file_exists($imageName)) {
+        //             unlink($imageName);
+        //         }
+        //     }
+        // }
+
         $entityManager->remove($trick);
         $entityManager->flush();
 

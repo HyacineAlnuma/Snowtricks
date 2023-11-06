@@ -10,6 +10,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Category;
+use App\Repository\CategoryRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
 class TrickType extends AbstractType
@@ -19,13 +22,12 @@ class TrickType extends AbstractType
         $builder
             ->add('name')
             ->add('description', TextareaType::class)
-            ->add('category', ChoiceType::class, [
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
                 'placeholder' => 'Sélectionnez une catégorie',
-                'choices'  => [
-                    'Maybe' => 'null',
-                    'Yes' => 'yes',
-                    'No' => 'false',
-                ],
+                'query_builder'  => function(CategoryRepository $categoryRepository) {
+                    return $categoryRepository->createQueryBuilder('c')->orderBy('c.name', 'ASC');
+                },
             ])
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,

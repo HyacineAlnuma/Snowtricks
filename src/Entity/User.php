@@ -36,12 +36,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $ImageFileName = null;
+    private ?string $imageFileName = null;
 
-    #[ORM\OneToMany(mappedBy: 'User', targetEntity: Trick::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Trick::class)]
     private Collection $tricks;
 
-    #[ORM\OneToMany(mappedBy: 'User', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class)]
     private Collection $comments;
 
     public function __construct()
@@ -134,12 +134,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getImageFileName(): ?string
     {
-        return $this->ImageFileName;
+        return $this->imageFileName;
     }
 
-    public function setImageFileName(string $ImageFileName): static
+    public function setImageFileName(string $imageFileName): static
     {
-        $this->ImageFileName = $ImageFileName;
+        $this->imageFileName = $imageFileName;
 
         return $this;
     }

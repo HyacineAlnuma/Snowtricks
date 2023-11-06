@@ -16,23 +16,22 @@ class Image
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $FileName = null;
+    private ?string $fileName = null;
 
     #[Assert\Image([
-        'maxSize' => '10M',
+        'maxSize' => '15M',
         "mimeTypes" => [
             "image/png",
             "image/jpg",
             "image/jpeg",
         ],
-        "mimeTypesMessage" => "Veuillez envoyer une image au format png, jpg ou jpeg, de 10 mégas octets maximum"
+        "mimeTypesMessage" => "Veuillez envoyer une image au format png, jpg ou jpeg, de 15 mégas octets maximum"
     ])]
-    #[Assert\NotBlank]
     private ?File $file = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]
     #[ORM\JoinColumn(onDelete: "CASCADE", nullable: false)]
-    private ?Trick $Trick = null;
+    private ?Trick $trick = null;
 
     public function getId(): ?int
     {
@@ -41,12 +40,12 @@ class Image
 
     public function getFileName(): ?string
     {
-        return $this->FileName;
+        return $this->fileName;
     }
 
-    public function setFileName(?string $FileName): static
+    public function setFileName(?string $fileName): static
     {
-        $this->FileName = $FileName;
+        $this->fileName = $fileName;
 
         return $this;
     }
@@ -65,12 +64,12 @@ class Image
 
     public function getTrick(): ?Trick
     {
-        return $this->Trick;
+        return $this->trick;
     }
 
-    public function setTrick(?Trick $Trick): static
+    public function setTrick(?Trick $trick): static
     {
-        $this->Trick = $Trick;
+        $this->trick = $trick;
 
         return $this;
     }

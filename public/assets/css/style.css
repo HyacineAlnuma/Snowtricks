@@ -2026,6 +2026,12 @@ h1, h2, h3, h4, h5,
   border: none;
   }
 
+div[id^=trick_videos] {
+  position: relative;
+  left: 0;
+  margin: 20px 0 10px 10px;
+}
+
 .form-style input{
   border: none;
   padding: 10px;
@@ -2219,3 +2225,42 @@ h1, h2, h3, h4, h5,
 .comment-form-input textarea:focus{
   outline: none;
   }
+
+.pagination {
+  padding: 7px 3px;
+  font-size: 20px;
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+}
+
+.page-link {
+  position: relative;
+  display: block;
+  padding: 7px 3px;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.page-item.disabled, .disabled > .page-item {
+  color: gray;
+  pointer-events: none;
+}
+
+.page-item.active, .active > .page-item {
+  z-index: 3;
+  color: white;
+  background-color: #efba6c;
+  border-color: #efba6c;
+}
+
+.page-item.active a, .active > .page-item a{
+  color: white;
+}
+
+.page-item {
+  padding: 10px;
+  color: #efba6c;  
+  border-radius: 10%;
+}

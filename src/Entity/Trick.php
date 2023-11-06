@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as ImageAssert;
 
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
@@ -41,15 +42,18 @@ class Trick
     private ?string $slug = null;
 
     #[Assert\Valid]
-    #[ORM\OneToMany(mappedBy: 'Trick', targetEntity: Image::class, orphanRemoval: true, cascade:['persist'])]
+    #[ImageAssert\ContainsImage]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Image::class, orphanRemoval: true, cascade:['persist'])]
     private Collection $images;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $User = null;
+    private ?User $user = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $Category = null;
+    #[ORM\ManyToOne(inversedBy: 'tricks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
 
     public function __construct()
     {
@@ -163,6 +167,10 @@ class Trick
             // set the owning side to null (unless already changed)
             if ($image->getTrick() === $this) {
                 $image->setTrick(null);
+                $imageName = '/public/uploads/tricks/' . $image->getFileName();
+                if (file_exists($imageName)) {
+                    unlink($imageName);
+                }
             }
         }
 
@@ -171,24 +179,24 @@ class Trick
 
     public function getUser(): ?User
     {
-        return $this->User;
+        return $this->user;
     }
 
-    public function setUser(?User $User): static
+    public function setUser(?User $user): static
     {
-        $this->User = $User;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getCategory(): ?string
+    public function getCategory(): ?Category
     {
-        return $this->Category;
+        return $this->category;
     }
 
-    public function setCategory(string $Category): static
+    public function setCategory(?Category $category): static
     {
-        $this->Category = $Category;
+        $this->category = $category;
 
         return $this;
     }

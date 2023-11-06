@@ -32,7 +32,7 @@ document
     })
 
 document
-    .querySelectorAll('ul.images input')
+    .querySelectorAll('ul.images div.form-row')
     .forEach((image) => {
         addImageFormDeleteLink(image)
     })

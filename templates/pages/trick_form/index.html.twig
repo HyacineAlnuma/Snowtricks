@@ -76,7 +76,7 @@
                             },
                             row_attr: {
                             class: 'form-row'
-                        }
+                            }
                         }) }}
                         <div class="col-lg-4 col-md-6 mb-4">
                         <div class="listing-image">
@@ -89,7 +89,10 @@
                     </ul>
                     <button type="button" class="add_image_link" data-collection-holder-class="images">Add an image</button>
 
-
+                    {% if error %}
+                    <p>{{ error }}</p>
+                    {% endif %}
+                    
                     <button type="submit" class="btn btn-primary">Créer</button>
                 {{ form_end(form) }}
             </div>  
