@@ -30,6 +30,7 @@ class TrickType extends AbstractType
                 },
             ])
             ->add('videos', CollectionType::class, [
+                'label' => false,
                 'entry_type' => VideoType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,
@@ -37,6 +38,7 @@ class TrickType extends AbstractType
                 'by_reference' => false,
             ])
             ->add('images', CollectionType::class, [
+                'label' => false,
                 'entry_type' => ImageType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,

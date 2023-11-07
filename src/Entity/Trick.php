@@ -61,7 +61,6 @@ class Trick
         $this->addVideo(new Video());
         $this->comments = new ArrayCollection();
         $this->images = new ArrayCollection();
-        $this->addImage(new Image());
     }
 
     public function getId(): ?int
@@ -167,10 +166,6 @@ class Trick
             // set the owning side to null (unless already changed)
             if ($image->getTrick() === $this) {
                 $image->setTrick(null);
-                $imageName = '/public/uploads/tricks/' . $image->getFileName();
-                if (file_exists($imageName)) {
-                    unlink($imageName);
-                }
             }
         }
 

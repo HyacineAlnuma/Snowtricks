@@ -26,6 +26,7 @@ use App\Form\TrickType;
 use App\Form\CommentType;
 
 use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class TrickController extends AbstractController
 {
@@ -91,8 +92,10 @@ class TrickController extends AbstractController
             if ($formImage = $form->get('images')) {
                 $fileUploader->upload($formImage, $targetDirectory);
             }
-            if (null == $trick->getImages()[0]->getFileName()) {
+            if ($trick->getImages()->isEmpty() == true) {
                 $error = 'Vous devez sélectionner au moins une image';
+            } elseif ($trick->getVideos()->isEmpty() == true) {
+                $error = 'Vous devez sélectionner au moins une video';
             } else {
             $trick->setUser($this->getUser());
             $trickManager->manageVideoUrl($trick->getVideos());
@@ -120,15 +123,37 @@ class TrickController extends AbstractController
     {
         $form = $this->createForm(TrickType::class, $trick);
 
+        $originalImages = new ArrayCollection();
+
+        foreach ($trick->getImages() as $originalImage) {
+            $cloneImage = clone $originalImage;
+            $originalImages->add($cloneImage);
+        }
+
         $form->handleRequest($request);
 
         $error = '';
         if ($form->isSubmitted() && $form->isValid()) {
             if ($formImage = $form->get('images')) {
                 $fileUploader->upload($formImage, $targetDirectory);
+                // foreach($originalImages as $image) {
+                    // dump($originalImages);
+                    // dd($trick->getImages());
+                    // dump($image);
+                    // dump($trick->getImages());
+                    // dd($trick->getImages()->contains($image));
+                //     if (false === $trick->getImages()->contains($image)) {
+                //         $imageName = $targetDirectory. '/' . $image->getFileName();
+                //         if (file_exists($imageName)) {
+                //             unlink($imageName);
+                //         }
+                //     }
+                // }
             }
-            if (null == $trick->getImages()[0]->getFileName()) {
+            if ($trick->getImages()->isEmpty() == true) {
                 $error = 'Vous devez sélectionner au moins une image';
+            } elseif ($trick->getVideos()->isEmpty() == true) {
+                $error = 'Vous devez sélectionner au moins une video';
             } else {
                 $trickManager->manageVideoUrl($trick->getVideos());
                 $trick->setSlug($trickManager->createSlug($trick->getName()));
@@ -147,16 +172,16 @@ class TrickController extends AbstractController
     #[Route('/deleteTrick/{slug}', name: 'delete_trick')]
     public function deleteTrick(EntityManagerInterface $entityManager, Trick $trick, #[Autowire('%tricks_dir%')] string $targetDirectory)
     {
-        // $images = $trick->getImages();
+        $images = $trick->getImages();
 
-        // if($images) {
-        //     foreach($images as $image) {
-        //         $imageName = $targetDirectory. '/' . $image->getFileName();
-        //         if (file_exists($imageName)) {
-        //             unlink($imageName);
-        //         }
-        //     }
-        // }
+        if($images) {
+            foreach($images as $image) {
+                $imageName = $targetDirectory. '/' . $image->getFileName();
+                if (file_exists($imageName)) {
+                    unlink($imageName);
+                }
+            }
+        }
 
         $entityManager->remove($trick);
         $entityManager->flush();
