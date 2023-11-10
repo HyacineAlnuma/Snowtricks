@@ -41,24 +41,32 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            if ($photo = $form['photo']->getData()) {
-                $fileName = uniqid().'.'.$photo->guessExtension();
-                $photo->move($photoDir, $fileName);
-            } else {
-                $fileName = 'defaultImage.png';
+            //dd($form->get('photo'));
+
+            dd($form->get('photo'));
+            dump($bla);
+            foreach($bla as $d) {
+                dump($d);
             }
 
-            $user->setImageFileName($fileName);
+            // if ($photo = $form['photo']->getData()) {
+            //     $fileName = uniqid().'.'.$photo->guessExtension();
+            //     $photo->move($photoDir, $fileName);
+            // } else {
+            //     $fileName = 'defaultImage.png';
+            // }
 
-            $entityManager->persist($user);
-            $entityManager->flush();
-            // do anything else you need here, like send an email
+            // $user->setImageFileName($fileName);
 
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
-            );
+            // $entityManager->persist($user);
+            // $entityManager->flush();
+            // // do anything else you need here, like send an email
+
+            // return $userAuthenticator->authenticateUser(
+            //     $user,
+            //     $authenticator,
+            //     $request
+            // );
         }
 
         return $this->render('registration/register.html.twig', [

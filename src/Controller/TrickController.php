@@ -136,19 +136,18 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($formImage = $form->get('images')) {
                 $fileUploader->upload($formImage, $targetDirectory);
-                // foreach($originalImages as $image) {
-                    // dump($originalImages);
-                    // dd($trick->getImages());
-                    // dump($image);
-                    // dump($trick->getImages());
-                    // dd($trick->getImages()->contains($image));
-                //     if (false === $trick->getImages()->contains($image)) {
-                //         $imageName = $targetDirectory. '/' . $image->getFileName();
-                //         if (file_exists($imageName)) {
-                //             unlink($imageName);
-                //         }
-                //     }
-                // }
+                $newImagesId = [];
+                foreach ($trick->getImages() as $newImage) {
+                    $newImagesFilename[] = $newImage->getFileName();
+                }
+                foreach($originalImages as $image) {
+                    if (!in_array($image->getFileName(), $newImagesId)) {
+                        $imageName = $targetDirectory. '/' . $image->getFileName();
+                        if (file_exists($imageName)) {
+                            unlink($imageName);
+                        }
+                    }
+                }
             }
             if ($trick->getImages()->isEmpty() == true) {
                 $error = 'Vous devez sélectionner au moins une image';

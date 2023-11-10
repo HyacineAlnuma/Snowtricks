@@ -17,6 +17,7 @@ class FileUploader
     public function upload(Form $images, string $targetDirectory): void
     {
         foreach($images as $image) {
+            dd($image);
             $file = $image->get('file')->getData();
             if(!$file) {
                 continue;
@@ -29,7 +30,7 @@ class FileUploader
                 $file->move($targetDirectory, $fileName);
                 $image->getData()->setFileName($fileName);
             } catch (FileException $e) {
-                // ... handle exception if something happens during file upload
+                //exception si erreur pendant l'upload
             }
         }
     }

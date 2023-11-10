@@ -81,6 +81,7 @@ const addPreviewToExistingImagesRow = (e) => {
 
         previewBeforeUpload(i, 'trick_images_'+i+'_file');
     }
+    previewBeforeUpload(1, 'registration_form_photo');
 }
 
 addEventListener("load",(event) => {

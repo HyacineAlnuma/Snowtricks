@@ -2183,9 +2183,9 @@ textarea[id^=trick_videos] {
   cursor: pointer;
 }
 
-.images > li input[type=file] {
+/* .images > li input[type=file] {
   display: none;
-}
+} */
 
 .images > li button {
   margin: 0 !important;
