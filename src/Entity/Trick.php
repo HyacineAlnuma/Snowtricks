@@ -21,11 +21,11 @@ class Trick
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank (message: 'Veuillez remplir ce champs')]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank (message: 'Veuillez remplir ce champs')]
     #[ORM\Column(type: 'text', length: 65535)]
     private ?string $description = null;
 
