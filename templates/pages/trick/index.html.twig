@@ -52,7 +52,7 @@
                   {{ form_start(form) }}
                     <li class="comment">
                         <div class="vcard bio">
-                            <img src="{{ asset('uploads/images/' ~ app.user.imageFileName) }}" alt="Image">
+                            <img src="{{ asset('uploads/profile-pictures/' ~ app.user.imageFileName) }}" alt="Image">
                         </div>
                         <div class="comment-body">
                         {{ form_row(form.content, {
@@ -77,7 +77,7 @@
                   {% for comment in comments.data %}
                         <li class="comment">
                         <div class="vcard bio">
-                            <img src="{{ asset('uploads/images/' ~ comment.user.imageFileName) }}" alt="Image">
+                            <img src="{{ asset('uploads/profile-pictures/' ~ comment.user.imageFileName) }}" alt="Image">
                         </div>
                         <div class="comment-body">
                             <h3>{{ comment.user.username }}</h3>

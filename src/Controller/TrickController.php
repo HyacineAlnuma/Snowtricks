@@ -136,12 +136,12 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($formImage = $form->get('images')) {
                 $fileUploader->upload($formImage, $targetDirectory);
-                $newImagesId = [];
+                $newImagesFilename = [];
                 foreach ($trick->getImages() as $newImage) {
                     $newImagesFilename[] = $newImage->getFileName();
                 }
                 foreach($originalImages as $image) {
-                    if (!in_array($image->getFileName(), $newImagesId)) {
+                    if (!in_array($image->getFileName(), $newImagesFilename)) {
                         $imageName = $targetDirectory. '/' . $image->getFileName();
                         if (file_exists($imageName)) {
                             unlink($imageName);

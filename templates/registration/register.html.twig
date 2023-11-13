@@ -14,13 +14,16 @@
             <div class="form-style"> 
             <h1 class="mb-4">Inscription</h1>
 
-            <form method="post">
                 {% if app.user %}
                     <div class="mb-3">
                         You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
                     </div>
                     
                 {% else %}
+
+                    {% for flash_error in app.flashes('verify_email_error') %}
+                        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                    {% endfor %}
 
                     {{ form_errors(registrationForm) }}
 
@@ -43,7 +46,15 @@
                                 class: 'form-row'
                             }
                         }) }}
-                        {{ form_row(registrationForm.photo) }}
+                        {{ form_row(registrationForm.photo, {
+                            label: "Sélectionner une photo de profil",
+                            label_attr: {
+                                class: 'image-label'
+                            },
+                            row_attr: {
+                                class: 'form-row'
+                            }
+                        }) }}
                         <div id='registration_form_photo-preview' class='preview-image'>
                             <img src="" alt="">
                         </div>
@@ -66,13 +77,3 @@
         </div>
     </div>
 {% endblock %}
-
-{# , {
-                            label: "Sélectionner une photo de profil",
-                            label_attr: {
-                                class: 'image-label'
-                            },
-                            row_attr: {
-                                class: 'form-row'
-                            }
-                        } #}
