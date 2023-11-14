@@ -47,7 +47,7 @@ class TrickController extends AbstractController
     {
         $page = $request->query->getInt('commentsPage', 1);
 
-        $comments = $commentRepository->findCommentsPaginated($page, $trick->getSlug(), 1);
+        $comments = $commentRepository->findCommentsPaginated($page, $trick->getSlug(), 10);
 
         $comment = new Comment();
 
@@ -96,6 +96,7 @@ class TrickController extends AbstractController
                 $error = 'Vous devez sélectionner au moins une image';
             } elseif ($trick->getVideos()->isEmpty() == true) {
                 $error = 'Vous devez sélectionner au moins une video';
+                header("Refresh:3");
             } else {
             $trick->setUser($this->getUser());
             $trickManager->manageVideoUrl($trick->getVideos());
@@ -153,6 +154,7 @@ class TrickController extends AbstractController
                 $error = 'Vous devez sélectionner au moins une image';
             } elseif ($trick->getVideos()->isEmpty() == true) {
                 $error = 'Vous devez sélectionner au moins une video';
+                header("Refresh:3");
             } else {
                 $trickManager->manageVideoUrl($trick->getVideos());
                 $trick->setSlug($trickManager->createSlug($trick->getName()));

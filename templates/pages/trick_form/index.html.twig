@@ -15,6 +15,11 @@
             {% else %}
             <h1 class="mb-4">Modifiez la figure</h1>
             {% endif %} 
+                {% if error %}
+                    <div class="alert alert-danger error-message" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
                 {{ form_start(form) }}
                     
                     {{ form_row(form.name, {
@@ -92,12 +97,6 @@
 
                     </ul>
                     <button type="button" class="add_image_link" data-collection-holder-class="images">Ajouter une image</button>
-
-                    {% if error %}
-                        <div class="alert alert-danger error-message" role="alert">
-                            {{ error }}
-                        </div>
-                    {% endif %}
                     
                     <button type="submit" class="btn btn-primary">Créer la figure</button>
                 {{ form_end(form) }}
@@ -107,3 +106,5 @@
         </div>
     </div>
 {% endblock %}
+
+          

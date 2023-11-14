@@ -2321,3 +2321,16 @@ textarea[id^=trick_videos] {
   width: 400px;
   margin: 30px auto;
 }
+
+.category-style {
+  border: 1px solid #efba6c;
+  background-color: #fff2e5;
+  color: #efba6c;
+  padding: 8px;
+  border-radius: 15%;
+  text-transform: uppercase;
+  font-weight: bold;
+  width: 125px;
+  text-align: center;
+  margin-bottom: 40px;
+}
