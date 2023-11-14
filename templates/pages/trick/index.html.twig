@@ -7,4 +7,13 @@
     <p>{{ trick.date }}</p>
     <a href="/updateTrick/{{ trick.id }}">Mettre à jour</a>
     <a href="/deleteTrick/{{ trick.id }}">Supprimer</a>
+
+    {{ form_start(form) }}
+        {{ form_row(form.content) }}
+
+        <button type="submit" class="btn btn-primary">Créer</button>
+    {{ form_end(form) }}
+    {% for comment in comments %}
+        <p>{{ comment.content }}</p>
+    {% endfor %}
 {% endblock %}
