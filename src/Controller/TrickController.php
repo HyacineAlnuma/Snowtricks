@@ -37,8 +37,7 @@ class TrickController extends AbstractController
         $user = $this->getUser();
 
         return $this->render('pages/home/index.html.twig', [
-            'tricks' => $tricks,
-            'user' => $user
+            'tricks' => $tricks
         ]);
     }
 
@@ -89,15 +88,15 @@ class TrickController extends AbstractController
 
         $error = '';
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($formImage = $form->get('images')) {
-                $fileUploader->upload($formImage, $targetDirectory);
-            }
             if ($trick->getImages()->isEmpty() == true) {
                 $error = 'Vous devez sélectionner au moins une image';
-            } elseif ($trick->getVideos()->isEmpty() == true) {
+            } 
+            if ($trick->getVideos()->isEmpty() == true) {
                 $error = 'Vous devez sélectionner au moins une video';
-                header("Refresh:3");
             } else {
+            if ($formImage = $form->get('images')) {
+                $fileUploader->upload($formImage, $targetDirectory);
+            } 
             $trick->setUser($this->getUser());
             $trickManager->manageVideoUrl($trick->getVideos());
             $trick->setSlug($trickManager->createSlug($trick->getName()));
@@ -135,27 +134,28 @@ class TrickController extends AbstractController
 
         $error = '';
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($formImage = $form->get('images')) {
-                $fileUploader->upload($formImage, $targetDirectory);
-                $newImagesFilename = [];
-                foreach ($trick->getImages() as $newImage) {
-                    $newImagesFilename[] = $newImage->getFileName();
-                }
-                foreach($originalImages as $image) {
-                    if (!in_array($image->getFileName(), $newImagesFilename)) {
-                        $imageName = $targetDirectory. '/' . $image->getFileName();
-                        if (file_exists($imageName)) {
-                            unlink($imageName);
-                        }
-                    }
-                }
-            }
             if ($trick->getImages()->isEmpty() == true) {
                 $error = 'Vous devez sélectionner au moins une image';
-            } elseif ($trick->getVideos()->isEmpty() == true) {
+            } 
+            if ($trick->getVideos()->isEmpty() == true) {
                 $error = 'Vous devez sélectionner au moins une video';
                 header("Refresh:3");
             } else {
+                if ($formImage = $form->get('images')) {
+                    $fileUploader->upload($formImage, $targetDirectory);
+                    $newImagesFilename = [];
+                    foreach ($trick->getImages() as $newImage) {
+                        $newImagesFilename[] = $newImage->getFileName();
+                    }
+                    foreach($originalImages as $image) {
+                        if (!in_array($image->getFileName(), $newImagesFilename)) {
+                            $imageName = $targetDirectory. '/' . $image->getFileName();
+                            if (file_exists($imageName)) {
+                                unlink($imageName);
+                            }
+                        }
+                    }
+                }
                 $trickManager->manageVideoUrl($trick->getVideos());
                 $trick->setSlug($trickManager->createSlug($trick->getName()));
 

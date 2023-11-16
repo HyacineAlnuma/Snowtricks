@@ -29,11 +29,6 @@ class TrickManager
 
     public function createSlug(string $name) : string
     {
-        // $slugger = new AsciiSlugger();
-        // return $slugger->slug($name);
-        // $pattern = '/[^\w\-]+|-|_/';
-        // $slug = preg_replace($pattern, '', $name);
-        // return strtolower($slug);
         return $this->slugger->slug($name);
     }
 }

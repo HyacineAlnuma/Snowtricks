@@ -54,17 +54,4 @@
         </div>
       </div>
     </div>
-
-    {# {% if app.user %}
-        <img src="{{ asset('uploads/images/' ~ user.imageFileName) }}" alt="">
-    {% endif %}
-
-    {% for trick in tricks %}
-        <h2>{{ trick.name }}</h2>
-        <p>{{ trick.author }}</p>
-        <p>{{ trick.description }}</p>
-        <a href="{{ url('show_trick', {slug: trick.slug}) }}">Lien vers le trick</a>
-        <a href="{{ url('update_trick', {slug: trick.slug}) }}">Mettre à jour</a>
-        <a href="{{ url('delete_trick', {slug: trick.slug}) }}">Supprimer</a>
-    {% endfor %} #}
 {% endblock %}
