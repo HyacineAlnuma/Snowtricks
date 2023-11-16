@@ -14,6 +14,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            user_checker: App\Security\UserChecker
             lazy: true
             provider: app_user_provider
             custom_authenticator: App\Security\AppAuthenticator
@@ -39,6 +40,10 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/addTrick, roles: [IS_AUTHENTICATED_FULLY, ROLE_USER] }
+        - { path: ^/deleteTrick, roles: [IS_AUTHENTICATED_FULLY, ROLE_USER] }
+        - { path: ^/updateTrick, roles: [IS_AUTHENTICATED_FULLY, ROLE_USER] }
+        - { path: ^/addComment, roles: [IS_AUTHENTICATED_FULLY, ROLE_USER] }
 
 when@test:
     security:
