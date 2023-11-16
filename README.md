@@ -24,7 +24,7 @@ composer install
 
 Create a .env.local file at the root of the project which is a copy of the .env file where you update the following variables with your own configuration:
 
-DATABASE_URL
+DATABASE_URL  
 MAILER_DSN
 
 
