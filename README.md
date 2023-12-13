@@ -2,11 +2,9 @@
 
 ## CONTEXT
 
-Jimmy Sweat est un entrepreneur ambitieux passionné de snowboard. Son objectif est la création d'un site collaboratif pour faire connaître ce sport auprès du grand public et aider à l'apprentissage des figures (tricks).
+This is my first project that I built entirely using Symfony.
+The project is about bulding a collaborative website for snowboard freestyle. Users are able to create an account, verify their email adress, change their password if they forgot it, login, create, modify, delete and comment tricks (adding one ore more images aswell as youtube video links).
 
-Il souhaite capitaliser sur du contenu apporté par les internautes afin de développer un contenu riche et suscitant l’intérêt des utilisateurs du site. Par la suite, Jimmy souhaite développer un business de mise en relation avec les marques de snowboard grâce au trafic que le contenu aura généré.
-
-Pour ce projet, nous allons nous concentrer sur la création technique du site pour Jimmy.
 
 ## INSTALLATION
 
