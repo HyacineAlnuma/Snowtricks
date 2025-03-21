@@ -10,7 +10,7 @@ The project is about bulding a collaborative website for snowboard freestyle. Us
 
 To clone the project run the following command: 
 ```
-git clone https://github.com/HyacineAlnuma/PHP_P5.git
+git clone https://github.com/HyacineAlnuma/Snowtricks.git
 ```
 
 To install the dependencies of the project run the following command:
